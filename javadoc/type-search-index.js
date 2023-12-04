@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.firstinspires.ftc.teamcode","l":"BaseConstants"},{"p":"org.firstinspires.ftc.teamcode","l":"EasyEncoders"},{"p":"org.firstinspires.ftc.teamcode","l":"EasyEncodersTest"}];updateSearchResults();
