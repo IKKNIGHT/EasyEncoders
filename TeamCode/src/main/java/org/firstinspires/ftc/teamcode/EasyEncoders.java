@@ -200,7 +200,14 @@ public class EasyEncoders extends LinearOpMode {
         frontLeft.setTargetPosition(ticks);
         backRight.setTargetPosition(-ticks);
         backLeft.setTargetPosition(ticks);
-
+        frontRight.setPower(power);
+        frontLeft.setPower(power);
+        backRight.setPower(power);
+        backLeft.setPower(power);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
     /**
      * Turns robot Left
@@ -270,7 +277,7 @@ public class EasyEncoders extends LinearOpMode {
         ResetAngle();
         double h = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         double z = Math.toDegrees(Math.acos(x/h));
-        TurnToAngle((int) z, power);
+        TurnToAngle((int) (90-z), power);
         Forward((int) h, power);
     }
 
