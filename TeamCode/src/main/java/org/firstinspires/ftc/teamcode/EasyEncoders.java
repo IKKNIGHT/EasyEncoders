@@ -17,10 +17,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Autonomous
 @Disabled
 public class EasyEncoders extends LinearOpMode {
-    DcMotorEx frontRight;
-    DcMotorEx frontLeft;
-    DcMotorEx backRight;
-    DcMotorEx backLeft;
+    private DcMotorEx frontRight;
+    private DcMotorEx frontLeft;
+    private DcMotorEx backRight;
+    private DcMotorEx backLeft;
     public LinearOpMode parent;
     public Telemetry telemetry;
     BNO055IMU imu;
@@ -69,6 +69,56 @@ public class EasyEncoders extends LinearOpMode {
      */
     public int InchesToTicks(double inches){
         return (int) (inches * BaseConstants.TICKS_PER_INCH);
+    }
+
+
+
+    /**
+     * Gets a motor so you can use it in your own methods
+     *
+     * @param MotorName the constant name of the motor EX : BaseConstants.FRONT_RIGHT
+     * @return DcMotorEx
+     */
+    public DcMotorEx getMotor(String MotorName){
+        switch (MotorName){
+            case BaseConstants.FRONT_RIGHT:
+                return frontRight;
+            case BaseConstants.FRONT_LEFT:
+                return frontLeft;
+            case BaseConstants.BACK_RIGHT:
+                return backRight;
+            case BaseConstants.BACK_LEFT:
+                return backLeft;
+            default:
+                return null;
+        }
+    }
+    /**
+     * Gets the imu so you can use it in your own methods
+     *
+     * @return BNO055IMU
+     */
+    public BNO055IMU getImu(){
+        return imu;
+    }
+    /**
+     * Sets the init Telemetry
+     */
+    public void setTelemetry(Telemetry telemetry){
+        this.telemetry = telemetry;
+    }
+    /**
+     * Sets the parent object
+     */
+    public void setParent(LinearOpMode parent){
+        this.parent = parent;
+    }
+
+    /**
+     * Decelerate the robot
+     */
+    public void slowdown(){
+        sleep(1);
     }
 
     /**

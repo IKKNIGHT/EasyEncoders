@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit.VOLTS;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
+
 @Autonomous()
 public class EasyEncodersTest extends LinearOpMode {
     @Override
@@ -23,6 +29,8 @@ public class EasyEncodersTest extends LinearOpMode {
             drive.Drive(-250, -250, -250, -250,0.5);
             drive.LineTo(250, 250, 0.5);
             drive.LineTo(-250, -250, 0.5);
+            telemetry.addData("Back Right AMPS : ",drive.getMotor(BaseConstants.BACK_RIGHT).getCurrent(CurrentUnit.AMPS));
+            telemetry.update();
             break;
         }
     }
