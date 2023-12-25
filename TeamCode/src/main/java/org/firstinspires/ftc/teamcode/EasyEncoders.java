@@ -7,7 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.apache.commons.math3.geometry.Vector;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+
 /**
  * Easy Encoder Class has methods that make it easier to use encoders
  * **NOTE** this class requires the BaseConstants class to be in the same folder and configured
@@ -25,7 +29,10 @@ public class EasyEncoders extends LinearOpMode {
     public Telemetry telemetry;
     BNO055IMU imu;
     public static BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
+    private int frpos = 0;
+    private int flpos = 0;
+    private int brpos = 0;
+    private int blpos = 0;
     @Override
     public void runOpMode() throws InterruptedException {}
     // constructor
@@ -69,6 +76,42 @@ public class EasyEncoders extends LinearOpMode {
      */
     public int InchesToTicks(double inches){
         return (int) (inches * BaseConstants.TICKS_PER_INCH);
+    }
+
+    /**
+     * Gets the Absolute Position of the front right motor
+     * @return the position
+     */
+    public int getFrpos() {
+        return frpos;
+    }
+    /**
+     * Gets the Absolute Position of the front left motor
+     * @return the position
+     */
+    public int getFlpos() {
+        return flpos;
+    }
+    /**
+     * Gets the Absolute Position of the back right motor
+     * @return the position
+     */
+    public int getBrpos() {
+        return brpos;
+    }
+    /**
+     * Gets the Absolute Position of the back left motor
+     * @return the position
+     */
+    public int getBlpos() {
+        return blpos;
+    }
+    /**
+     * Gets the Absolute Position of all the motors
+     * @return the position in a VectorF(front right, front left, back right, back left);
+     */
+    public VectorF getAbsolutePos(){
+        return new VectorF(getFrpos(), getFlpos(), getBrpos(), getBlpos());
     }
 
 
@@ -192,6 +235,10 @@ public class EasyEncoders extends LinearOpMode {
         }
         // stop the motors
         StopAllMotors();
+        frpos += ticks;
+        flpos += ticks;
+        brpos += ticks;
+        blpos += ticks;
 
     }
 
@@ -229,6 +276,10 @@ public class EasyEncoders extends LinearOpMode {
         }
         // stop the motors
         StopAllMotors();
+        frpos -= ticks;
+        flpos += ticks;
+        brpos += ticks;
+        blpos -= ticks;
     }
 
     /**
@@ -258,6 +309,16 @@ public class EasyEncoders extends LinearOpMode {
         frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        // repeat until our position is close to the ticks position
+        while (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() && parent.opModeIsActive()) {
+            sleep(1);
+        }
+        // stop the motors
+        StopAllMotors();
+        frpos -= ticks;
+        flpos += ticks;
+        brpos -= ticks;
+        blpos += ticks;
     }
     /**
      * Turns robot Left
@@ -283,6 +344,8 @@ public class EasyEncoders extends LinearOpMode {
                 TurnLeft(10, power);
             }
         }
+        StopAllMotors();
+
     }
     /**
      * Drives the robot
@@ -313,6 +376,10 @@ public class EasyEncoders extends LinearOpMode {
         }
         // stop the motors
         StopAllMotors();
+        frpos += frontRightTicks;
+        flpos += frontLeftTicks;
+        brpos += backRightTicks;
+        blpos += backLeftTicks;
     }
 
     /**
@@ -329,6 +396,17 @@ public class EasyEncoders extends LinearOpMode {
         double z = Math.toDegrees(Math.acos(x/h));
         TurnToAngle((int) (90-z), power);
         Forward((int) h, power);
+
+    }
+    /**
+     * Goes to a position (x,y) in ticks Starting at (0,0)
+     * @param position the position to go to Vector2D use as new Vector2D(x,y)
+     * @param power power to move at
+     */
+    public void LineTo(Vector2D position, double power){
+        double x = position.getX();
+        double y = position.getY();
+        LineTo((int) x, (int) y, power);
     }
 
     /**
@@ -346,6 +424,17 @@ public class EasyEncoders extends LinearOpMode {
         TurnToAngle((int) z, power);
         Forward((int) h, power);
         TurnToAngle(angle, power);
+    }
+    /**
+     * Goes to a position (x,y) in ticks Starting at (0,0) and turns to a specific angle
+     * @param position the position to go to Vector2D use as new Vector2D(x,y)
+     * @param power power to move at
+     * @param angle angle to turn to
+     */
+    public void LineToLinearHeading(Vector2D position, double power, int angle) {
+        double x = position.getX();
+        double y = position.getY();
+        LineToLinearHeading((int) x, (int) y, power, angle);
     }
 
 }
